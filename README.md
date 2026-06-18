@@ -1,6 +1,6 @@
 # AA Klus CRM
 
-Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebouwd met Next.js, React, TypeScript en Tailwind CSS, met een voorbereid Prisma/SQLite schema.
+Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebouwd met Next.js, React, TypeScript en Tailwind CSS, met Prisma en Supabase PostgreSQL als databasebasis.
 
 ## Functies in deze MVP
 
@@ -40,20 +40,22 @@ Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebou
    cp .env.example .env
    ```
 
-   Zet voor lead-import ook:
+   Vul voor Supabase PostgreSQL en lead-import minimaal in:
 
    ```bash
+   DATABASE_URL="postgresql://postgres.<PROJECT_REF>:<DATABASE_PASSWORD>@<POOLER_REGION>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+   DIRECT_URL="postgresql://postgres:<DATABASE_PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres"
    IMPORT_API_KEY="een-sterke-geheime-key"
    CRM_LOGIN_PASSWORD="een-sterk-crm-wachtwoord"
    CRM_AUTH_SECRET="lange-random-secret-voor-cookie-signing"
    NEXT_PUBLIC_SITE_URL="https://crm.aa-klus.nl"
    ```
 
-3. Optioneel: initialiseer SQLite via Prisma:
+3. Initialiseer Supabase PostgreSQL via Prisma:
 
    ```bash
    npm run db:generate
-   npm run db:push
+   npm run db:migrate
    npm run db:seed
    ```
 
@@ -74,16 +76,14 @@ Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebou
 ```text
 src/app             Next.js pagina's en API-routes
 src/components      Herbruikbare UI- en CRM-componenten
-src/data            Dummydata en MVP data-entrypoint
+src/data            Prisma data-adapters en seeddata voor initialisatie
 src/domain          Business types en berekeningen
 src/lib             Kleine gedeelde helpers
-prisma              SQLite database schema en seedscript
+prisma              PostgreSQL schema, migraties en seedscript
 ```
 
 ## Later uitbreiden
 
-- Vervang `src/data/seed.ts` door echte databasequeries via Prisma of Supabase.
-- Vervang de tijdelijke in-memory lead-import store door Prisma-tabellen voor geïmporteerde leads en importlogs.
 - Voeg authenticatie toe per rol.
 - Koppel uploadopslag aan Supabase Storage, S3 of lokale NAS.
 - Vervang client-side PDF-print door server-side PDF-rendering wanneer automatische e-mailverzending nodig is.
@@ -112,6 +112,8 @@ Voor productie op `crm.aa-klus.nl`:
 2. Stel environment variables in:
 
    ```text
+   DATABASE_URL
+   DIRECT_URL
    IMPORT_API_KEY
    CRM_LOGIN_PASSWORD
    CRM_AUTH_SECRET
@@ -127,6 +129,31 @@ Voor productie op `crm.aa-klus.nl`:
    Of gebruik een A-record als je hostingprovider een vast IP-adres geeft.
 
 4. Zet HTTPS aan bij de host. In productie gebruikt de login-cookie automatisch `secure`.
+
+## Supabase PostgreSQL
+
+De app gebruikt Prisma met twee Supabase database-URL's:
+
+```text
+DATABASE_URL="postgresql://postgres.<PROJECT_REF>:<DATABASE_PASSWORD>@<POOLER_REGION>.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+DIRECT_URL="postgresql://postgres:<DATABASE_PASSWORD>@db.<PROJECT_REF>.supabase.co:5432/postgres"
+```
+
+Gebruik `DATABASE_URL` voor de pooled runtime-verbinding op Vercel. Gebruik `DIRECT_URL` voor Prisma migraties.
+
+Deploy databasewijzigingen:
+
+```bash
+npm run db:generate
+npm run db:migrate
+npm run db:seed
+```
+
+De eerste migratie staat in:
+
+```text
+prisma/migrations/20260618120000_init_supabase_postgres/migration.sql
+```
 
 ## Lead-import API
 

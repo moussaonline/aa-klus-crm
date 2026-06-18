@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import { workOrders } from "@/data/seed";
+import { getCrmData } from "@/data/crm-store";
 import { requireApiLogin } from "@/lib/server-auth";
 
 export async function GET() {
   const unauthorized = await requireApiLogin();
   if (unauthorized) return unauthorized;
-  return NextResponse.json(workOrders);
+  const data = await getCrmData();
+  return NextResponse.json(data.workOrders);
 }

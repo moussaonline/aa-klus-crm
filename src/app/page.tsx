@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   await requireCrmLogin("/");
-  return <CrmApp initialData={getCrmData()} />;
+  return <CrmApp initialData={await getCrmData()} />;
 }

@@ -7,7 +7,7 @@ const developmentImportKey = "dev-import-key";
 export async function GET() {
   const unauthorized = await requireApiLogin();
   if (unauthorized) return unauthorized;
-  return NextResponse.json(getLeadImportState());
+  return NextResponse.json(await getLeadImportState());
 }
 
 export async function POST(request: NextRequest) {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   }
 
   const payload = await request.json();
-  const result = importLead(payload);
+  const result = await importLead(payload);
 
   if (result.status === "error") {
     return NextResponse.json(result, { status: 400 });
