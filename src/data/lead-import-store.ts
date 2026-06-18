@@ -8,6 +8,7 @@ import {
   validateLeadImportPayload,
   ImportedLead
 } from "@/domain/lead-import";
+import type { Lead } from "@/domain/models";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 
@@ -102,6 +103,29 @@ export function getLeadImportState() {
       };
     })
   };
+}
+
+export function getImportedLeadsForCrm(): Lead[] {
+  const store = readStore();
+
+  return store.leads.map((lead) => ({
+    id: lead.id,
+    title: `${lead.projectType ?? "Nieuwe aanvraag"}${lead.city ? ` - ${lead.city}` : ""}`,
+    customerName: lead.name,
+    source: lead.source === "google_ads" ? "Google Ads" : lead.source === "facebook" ? "Facebook" : lead.source === "email" ? "website" : "website",
+    status: "nieuw",
+    priority: lead.priority,
+    createdAt: lead.importedAt.slice(0, 10),
+    notes: [
+      lead.message,
+      lead.email && `E-mail: ${lead.email}`,
+      lead.phone && `Telefoon: ${lead.phone}`,
+      lead.budget && `Budget: ${lead.budget}`,
+      lead.preferredDate && `Gewenste datum: ${lead.preferredDate}`,
+      lead.campaigns.length > 0 && `Campagnes: ${lead.campaigns.join(", ")}`
+    ].filter(Boolean).join(" | "),
+    followUpTask: lead.priority === "hoog" ? "Spoedlead vandaag opvolgen" : undefined
+  }));
 }
 
 function findDuplicate(importedLeads: ImportedLead[], payload: LeadImportPayload) {

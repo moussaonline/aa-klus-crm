@@ -21,6 +21,7 @@ Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebou
 - Professionele PDF-export voor offertes en facturen in AA Klus huisstijl.
 - Dashboard Pro met omzetgrafiek, conversieratio, leads, projecten, offertes en facturen.
 - Automatische lead-import via `/lead-import` en `POST /api/leads/import` voor website, e-mail, Facebook Lead Ads en Google Ads lead forms.
+- Publiek AA Klus websiteformulier via `/website-form`; dit formulier gebruikt de import API-key alleen server-side.
 - Gebruikersrollen voorbereid: eigenaar/admin, medewerker, verkoper en boekhouding.
 - Zoekfunctie op klant, telefoon, project, offerte en factuur.
 - API-routes en gescheiden domeinlogica als basis voor latere mobiele app met React Native of Expo.
@@ -129,6 +130,22 @@ google_ads
 Duplicate-detectie gebeurt op e-mail, telefoonnummer en `externalId`. Bij een duplicate wordt de bestaande geïmporteerde lead bijgewerkt met extra notities en campagne-informatie, zonder dubbele lead aan te maken.
 
 De route geeft `401 Unauthorized` als `x-api-key` ontbreekt of niet overeenkomt met `IMPORT_API_KEY`. Voor lokale demo zonder `.env` is `dev-import-key` beschikbaar.
+
+## Websiteformulier
+
+Het publieke AA Klus formulier staat op:
+
+```text
+/website-form
+```
+
+De browser verstuurt naar:
+
+```text
+POST /api/website-leads
+```
+
+Deze serverroute zet `source` altijd op `website` en stuurt de lead daarna server-side door naar `POST /api/leads/import` met `x-api-key: <IMPORT_API_KEY>`. De API-key komt dus niet in de browser terecht.
 
 ## Facebook Lead Ads
 

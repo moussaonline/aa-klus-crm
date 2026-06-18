@@ -1,4 +1,5 @@
 import { customers, invoices, leads, planningItems, projectAssets, projects, quotes, tasks, users, workOrders } from "./seed";
+import { getImportedLeadsForCrm } from "./lead-import-store";
 
 export const crmSeed = {
   customers,
@@ -14,3 +15,10 @@ export const crmSeed = {
 };
 
 export type CrmSeed = typeof crmSeed;
+
+export function getCrmData(): CrmSeed {
+  return {
+    ...crmSeed,
+    leads: [...getImportedLeadsForCrm(), ...leads]
+  };
+}
