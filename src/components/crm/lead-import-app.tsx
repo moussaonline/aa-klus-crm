@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Field, inputClass } from "@/components/ui/field";
 import { mapFacebookLeadToCRMLead, mapGoogleAdsLeadToCRMLead, parseLeadEmail, type ImportedLead, type LeadImportLog, type LeadImportPayload, type LeadImportSource } from "@/domain/lead-import";
 import { cn } from "@/lib/classnames";
+import { LogoutButton } from "@/components/crm/logout-button";
 
 interface LeadImportState {
   leads: ImportedLead[];
@@ -140,6 +141,7 @@ export function LeadImportApp() {
             <a href="/lead-import" className="flex min-h-11 items-center gap-2 rounded-md bg-brand-100 px-3 text-sm font-semibold text-brand-900">Lead Import</a>
             <a href="/website-form" className="flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-semibold text-slate-600 hover:bg-brand-50">Websiteformulier</a>
           </nav>
+          <LogoutButton />
           <div className="mt-5 rounded-md bg-slate-50 p-3 text-sm text-slate-600">
             <p className="font-semibold text-slate-800">Geen klanten-import</p>
             <p className="mt-1">Deze module maakt alleen leads en importlogs aan.</p>

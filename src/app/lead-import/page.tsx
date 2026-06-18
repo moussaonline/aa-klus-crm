@@ -1,5 +1,7 @@
 import { LeadImportApp } from "@/components/crm/lead-import-app";
+import { requireCrmLogin } from "@/lib/server-auth";
 
-export default function LeadImportPage() {
+export default async function LeadImportPage() {
+  await requireCrmLogin("/lead-import");
   return <LeadImportApp />;
 }

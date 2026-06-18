@@ -44,6 +44,9 @@ Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebou
 
    ```bash
    IMPORT_API_KEY="een-sterke-geheime-key"
+   CRM_LOGIN_PASSWORD="een-sterk-crm-wachtwoord"
+   CRM_AUTH_SECRET="lange-random-secret-voor-cookie-signing"
+   NEXT_PUBLIC_SITE_URL="https://crm.aa-klus.nl"
    ```
 
 3. Optioneel: initialiseer SQLite via Prisma:
@@ -89,6 +92,41 @@ prisma              SQLite database schema en seedscript
 - Hergebruik `src/domain` en gedeelde componentconcepten bij een latere Expo/React Native app.
 
 Er zijn geen externe betaalde diensten gebruikt.
+
+## Login en online domein
+
+Alle CRM-pagina's en CRM API-routes zijn beschermd met login via een httpOnly cookie. Publiek bereikbaar blijven:
+
+```text
+/login
+/api/auth/login
+/api/auth/logout
+/api/website-leads
+```
+
+Het websiteformulier kan daardoor publiek submissions blijven sturen naar `/api/website-leads`, terwijl de CRM zelf achter login staat.
+
+Voor productie op `crm.aa-klus.nl`:
+
+1. Deploy de Next.js app naar je hostingprovider.
+2. Stel environment variables in:
+
+   ```text
+   IMPORT_API_KEY
+   CRM_LOGIN_PASSWORD
+   CRM_AUTH_SECRET
+   NEXT_PUBLIC_SITE_URL=https://crm.aa-klus.nl
+   ```
+
+3. Voeg DNS toe:
+
+   ```text
+   crm.aa-klus.nl CNAME <hosting-provider-domain>
+   ```
+
+   Of gebruik een A-record als je hostingprovider een vast IP-adres geeft.
+
+4. Zet HTTPS aan bij de host. In productie gebruikt de login-cookie automatisch `secure`.
 
 ## Lead-import API
 

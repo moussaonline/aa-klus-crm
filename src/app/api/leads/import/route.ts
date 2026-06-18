@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getLeadImportState, importLead } from "@/data/lead-import-store";
+import { requireApiLogin } from "@/lib/server-auth";
 
 const developmentImportKey = "dev-import-key";
 
-export function GET() {
+export async function GET() {
+  const unauthorized = await requireApiLogin();
+  if (unauthorized) return unauthorized;
   return NextResponse.json(getLeadImportState());
 }
 

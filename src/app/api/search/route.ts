@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { customers, invoices, projects, quotes, workOrders } from "@/data/seed";
+import { requireApiLogin } from "@/lib/server-auth";
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const unauthorized = await requireApiLogin();
+  if (unauthorized) return unauthorized;
+
   const term = request.nextUrl.searchParams.get("q")?.toLowerCase() ?? "";
 
   if (!term) {

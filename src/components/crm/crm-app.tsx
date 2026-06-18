@@ -28,6 +28,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Field, inputClass } from "@/components/ui/field";
+import { LogoutButton } from "@/components/crm/logout-button";
 import { formatEuro, quoteTotals } from "@/domain/finance";
 import { exportInvoicePdf, exportQuotePdf, exportWorkOrderPdf } from "@/domain/pdf";
 import type { CrmSeed } from "@/data/crm-store";
@@ -122,6 +123,7 @@ export function CrmApp({ initialData }: { initialData: CrmSeed }) {
             <Import size={18} aria-hidden />
             Lead Import
           </a>
+          <LogoutButton />
 
           <div className="mt-5 rounded-md bg-slate-50 p-3 text-sm text-slate-600">
             <p className="font-semibold text-slate-800">Rollen klaar</p>
