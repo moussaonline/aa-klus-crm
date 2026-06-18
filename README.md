@@ -20,6 +20,7 @@ Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebou
 - WhatsApp-knoppen met templates voor afspraak, offerte, start werkzaamheden en afronding.
 - Professionele PDF-export voor offertes en facturen in AA Klus huisstijl.
 - Dashboard Pro met omzetgrafiek, conversieratio, leads, projecten, offertes en facturen.
+- Automatische lead-import via `/lead-import` en `POST /api/leads/import` voor website, e-mail, Facebook Lead Ads en Google Ads lead forms.
 - Gebruikersrollen voorbereid: eigenaar/admin, medewerker, verkoper en boekhouding.
 - Zoekfunctie op klant, telefoon, project, offerte en factuur.
 - API-routes en gescheiden domeinlogica als basis voor latere mobiele app met React Native of Expo.
@@ -36,6 +37,12 @@ Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebou
 
    ```bash
    cp .env.example .env
+   ```
+
+   Zet voor lead-import ook:
+
+   ```bash
+   IMPORT_API_KEY="een-sterke-geheime-key"
    ```
 
 3. Optioneel: initialiseer SQLite via Prisma:
@@ -72,6 +79,7 @@ prisma              SQLite database schema en seedscript
 ## Later uitbreiden
 
 - Vervang `src/data/seed.ts` door echte databasequeries via Prisma of Supabase.
+- Vervang de tijdelijke in-memory lead-import store door Prisma-tabellen voor geïmporteerde leads en importlogs.
 - Voeg authenticatie toe per rol.
 - Koppel uploadopslag aan Supabase Storage, S3 of lokale NAS.
 - Vervang client-side PDF-print door server-side PDF-rendering wanneer automatische e-mailverzending nodig is.
@@ -80,3 +88,80 @@ prisma              SQLite database schema en seedscript
 - Hergebruik `src/domain` en gedeelde componentconcepten bij een latere Expo/React Native app.
 
 Er zijn geen externe betaalde diensten gebruikt.
+
+## Lead-import API
+
+Externe bronnen sturen leads naar:
+
+```text
+POST /api/leads/import
+Header: x-api-key: <IMPORT_API_KEY>
+Content-Type: application/json
+```
+
+Voorbeeld voor een websiteformulier:
+
+```json
+{
+  "name": "Jan Jansen",
+  "phone": "0612345678",
+  "email": "jan@example.com",
+  "source": "website",
+  "message": "Ik wil een badkamer laten renoveren",
+  "projectType": "badkamer",
+  "city": "Amsterdam",
+  "budget": "10000-15000",
+  "preferredDate": "volgende maand",
+  "campaign": "website-contactformulier",
+  "externalId": "web-123"
+}
+```
+
+Toegestane sources:
+
+```text
+email
+website
+facebook
+google_ads
+```
+
+Duplicate-detectie gebeurt op e-mail, telefoonnummer en `externalId`. Bij een duplicate wordt de bestaande geïmporteerde lead bijgewerkt met extra notities en campagne-informatie, zonder dubbele lead aan te maken.
+
+De route geeft `401 Unauthorized` als `x-api-key` ontbreekt of niet overeenkomt met `IMPORT_API_KEY`. Voor lokale demo zonder `.env` is `dev-import-key` beschikbaar.
+
+## Facebook Lead Ads
+
+Gebruik later een Facebook webhook of serverless endpoint dat de Facebook payload eerst door `mapFacebookLeadToCRMLead()` haalt. Ondersteunde velden:
+
+```text
+full_name, phone_number, email, city, project_type, budget, campaign, id/externalId
+```
+
+De mapper zet `source` automatisch op `facebook` en bewaart `campaign` en `externalId`.
+
+## Google Ads Lead Forms
+
+Gebruik later een Google Ads webhook/connector die de Google payload eerst door `mapGoogleAdsLeadToCRMLead()` haalt. Ondersteunde velden:
+
+```text
+user_column_data, full_name, phone_number, email, postal_code, city, campaign, lead_id/externalId
+```
+
+De mapper zet `source` automatisch op `google_ads` en bewaart `campaign` en `externalId`.
+
+## E-mail Parsing
+
+Er is nog geen Gmail/Mail API-koppeling gebouwd. De helper `parseLeadEmail()` zet platte e-mailtekst om naar leadvelden.
+
+Ondersteund formaat:
+
+```text
+Naam: Jan Jansen
+Telefoon: 0612345678
+E-mail: jan@example.com
+Plaats: Amsterdam
+Project: Badkamer renovatie
+Budget: 10000
+Bericht: Ik wil mijn badkamer laten renoveren.
+```

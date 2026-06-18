@@ -13,6 +13,7 @@ import {
   Hammer,
   Home,
   Image as ImageIcon,
+  Import,
   MapPin,
   MessageCircle,
   Navigation,
@@ -116,6 +117,11 @@ export function CrmApp({ initialData }: { initialData: CrmSeed }) {
               );
             })}
           </nav>
+
+          <a href="/lead-import" className="mt-3 flex min-h-11 items-center gap-2 rounded-md border border-brand-100 bg-white px-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50">
+            <Import size={18} aria-hidden />
+            Lead Import
+          </a>
 
           <div className="mt-5 rounded-md bg-slate-50 p-3 text-sm text-slate-600">
             <p className="font-semibold text-slate-800">Rollen klaar</p>
