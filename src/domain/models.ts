@@ -7,6 +7,10 @@ export type QuoteStatus = "concept" | "verzonden" | "geaccepteerd" | "afgewezen"
 export type InvoiceStatus = "concept" | "verzonden" | "betaald" | "te laat";
 export type TaskStatus = "open" | "bezig" | "afgerond";
 export type UserRole = "eigenaar/admin" | "medewerker" | "verkoper" | "boekhouding";
+export type WorkOrderStatus = "concept" | "in uitvoering" | "gereed" | "gefactureerd";
+export type PlanningView = "dag" | "week" | "maand";
+export type ProjectAssetFolder = "voor foto's" | "na foto's" | "documenten";
+export type ProjectAssetType = "foto" | "pdf" | "contract" | "factuur";
 
 export interface Customer {
   id: string;
@@ -43,6 +47,43 @@ export interface Project {
   endDate?: string;
   budget: number;
   notes: string;
+}
+
+export interface WorkOrder {
+  id: string;
+  number: string;
+  customerId: string;
+  projectId: string;
+  executor: string;
+  date: string;
+  description: string;
+  materials: string;
+  hours: number;
+  status: WorkOrderStatus;
+}
+
+export interface PlanningItem {
+  id: string;
+  title: string;
+  customerId: string;
+  projectId: string;
+  workOrderId?: string;
+  mechanic: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  address: string;
+}
+
+export interface ProjectAsset {
+  id: string;
+  projectId: string;
+  folder: ProjectAssetFolder;
+  type: ProjectAssetType;
+  name: string;
+  size: number;
+  uploadedAt: string;
+  previewUrl?: string;
 }
 
 export interface QuoteLine {

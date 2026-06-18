@@ -1,4 +1,4 @@
-import { customers, invoices, leads, projects, quotes, tasks, users } from "./seed";
+import { customers, invoices, leads, planningItems, projectAssets, projects, quotes, tasks, users, workOrders } from "./seed";
 
 export const crmSeed = {
   customers,
@@ -7,6 +7,9 @@ export const crmSeed = {
   quotes,
   invoices,
   tasks,
+  workOrders,
+  planningItems,
+  projectAssets,
   users
 };
 

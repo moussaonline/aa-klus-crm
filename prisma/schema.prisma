@@ -70,6 +70,13 @@ enum TaskStatus {
   AFGEROND
 }
 
+enum WorkOrderStatus {
+  CONCEPT
+  IN_UITVOERING
+  GEREED
+  GEFACTUREERD
+}
+
 enum UserRole {
   ADMIN
   MEDEWERKER
@@ -93,6 +100,8 @@ model Customer {
   quotes    Quote[]
   invoices  Invoice[]
   tasks     Task[]
+  workOrders WorkOrder[]
+  planningItems PlanningItem[]
 }
 
 model Lead {
@@ -124,6 +133,53 @@ model Project {
   lead       Lead?         @relation(fields: [leadId], references: [id])
   quotes     Quote[]
   tasks      Task[]
+  workOrders WorkOrder[]
+  planningItems PlanningItem[]
+  assets     ProjectAsset[]
+}
+
+model WorkOrder {
+  id          String          @id @default(cuid())
+  number      String          @unique
+  customerId  String
+  projectId   String
+  executor    String
+  date        DateTime
+  description String
+  materials   String
+  hours       Float
+  status      WorkOrderStatus
+  customer    Customer        @relation(fields: [customerId], references: [id])
+  project     Project         @relation(fields: [projectId], references: [id])
+  planning    PlanningItem[]
+}
+
+model PlanningItem {
+  id          String     @id @default(cuid())
+  title       String
+  customerId  String
+  projectId   String
+  workOrderId String?
+  mechanic    String
+  date        DateTime
+  startTime   String
+  endTime     String
+  address     String
+  customer    Customer   @relation(fields: [customerId], references: [id])
+  project     Project    @relation(fields: [projectId], references: [id])
+  workOrder   WorkOrder? @relation(fields: [workOrderId], references: [id])
+}
+
+model ProjectAsset {
+  id         String   @id @default(cuid())
+  projectId  String
+  folder     String
+  type       String
+  name       String
+  size       Int
+  uploadedAt DateTime @default(now())
+  previewUrl String?
+  project    Project  @relation(fields: [projectId], references: [id])
 }
 
 model Quote {

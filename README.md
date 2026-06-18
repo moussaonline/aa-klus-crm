@@ -11,6 +11,15 @@ Een werkende CRM MVP voor renovatie- en klusbedrijf **AA Klus**. De app is gebou
 - Offertes met regels, BTW en automatische totaalberekening.
 - Facturen vanuit offerte of losse factuur, met betaaltermijn en status.
 - Taken met koppeling aan klant, lead of project.
+- Werkbonnen met nummering, uitvoerder, materialen, uren, status en PDF-export.
+- Planning met dag-, week- en maandweergave, gekoppeld aan klanten, projecten en werkbonnen.
+- Drag-and-drop planning tussen dagen.
+- Projectgalerij met mappen voor voor foto's, na foto's en documenten.
+- Uploadvoorbereiding voor foto's, PDF's, contracten en facturen.
+- Google Maps kaart- en routeknoppen per klant en planning.
+- WhatsApp-knoppen met templates voor afspraak, offerte, start werkzaamheden en afronding.
+- Professionele PDF-export voor offertes en facturen in AA Klus huisstijl.
+- Dashboard Pro met omzetgrafiek, conversieratio, leads, projecten, offertes en facturen.
 - Gebruikersrollen voorbereid: eigenaar/admin, medewerker, verkoper en boekhouding.
 - Zoekfunctie op klant, telefoon, project, offerte en factuur.
 - API-routes en gescheiden domeinlogica als basis voor latere mobiele app met React Native of Expo.
@@ -64,9 +73,10 @@ prisma              SQLite database schema en seedscript
 
 - Vervang `src/data/seed.ts` door echte databasequeries via Prisma of Supabase.
 - Voeg authenticatie toe per rol.
-- Voeg uploadopslag toe voor projectfoto's en documenten.
-- Bouw PDF-export voor offertes en facturen.
+- Koppel uploadopslag aan Supabase Storage, S3 of lokale NAS.
+- Vervang client-side PDF-print door server-side PDF-rendering wanneer automatische e-mailverzending nodig is.
 - Voeg e-Boekhouden-integratie toe via een aparte service in `src/domain` of `src/lib`.
+- Sluit WhatsApp Business API aan op de bestaande berichttemplates.
 - Hergebruik `src/domain` en gedeelde componentconcepten bij een latere Expo/React Native app.
 
 Er zijn geen externe betaalde diensten gebruikt.

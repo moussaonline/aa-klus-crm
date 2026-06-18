@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { customers, invoices, projects, quotes } from "@/data/seed";
+import { customers, invoices, projects, quotes, workOrders } from "@/data/seed";
 
 export function GET(request: NextRequest) {
   const term = request.nextUrl.searchParams.get("q")?.toLowerCase() ?? "";
@@ -20,7 +20,10 @@ export function GET(request: NextRequest) {
       .map((quote) => ({ type: "quote", id: quote.id, label: quote.number })),
     ...invoices
       .filter((invoice) => invoice.number.toLowerCase().includes(term))
-      .map((invoice) => ({ type: "invoice", id: invoice.id, label: invoice.number }))
+      .map((invoice) => ({ type: "invoice", id: invoice.id, label: invoice.number })),
+    ...workOrders
+      .filter((workOrder) => workOrder.number.toLowerCase().includes(term))
+      .map((workOrder) => ({ type: "workOrder", id: workOrder.id, label: workOrder.number }))
   ];
 
   return NextResponse.json(results);

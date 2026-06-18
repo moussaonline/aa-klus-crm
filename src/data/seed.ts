@@ -1,4 +1,4 @@
-import type { Customer, Invoice, Lead, Project, Quote, Task, User } from "@/domain/models";
+import type { Customer, Invoice, Lead, PlanningItem, Project, ProjectAsset, Quote, Task, User, WorkOrder } from "@/domain/models";
 
 export const customers: Customer[] = [
   {
@@ -179,6 +179,82 @@ export const tasks: Task[] = [
     status: "open",
     relationType: "project",
     relationId: "proj_003"
+  }
+];
+
+export const workOrders: WorkOrder[] = [
+  {
+    id: "wo_001",
+    number: "WB-2026-021",
+    customerId: "cust_001",
+    projectId: "proj_001",
+    executor: "Ahmed",
+    date: "2026-06-18",
+    description: "Inmeten badkamer, leidingtraces controleren en materiaalstaat voorbereiden.",
+    materials: "Meetrapport, markeerspray, leidingdetectie",
+    hours: 3.5,
+    status: "in uitvoering"
+  },
+  {
+    id: "wo_002",
+    number: "WB-2026-022",
+    customerId: "cust_002",
+    projectId: "proj_002",
+    executor: "Samir",
+    date: "2026-06-19",
+    description: "Herstel kitnaden, deur afhangen en kleine lekkage keuken oplossen.",
+    materials: "Sanitairkit, scharnieren, koppeling 15mm",
+    hours: 6,
+    status: "concept"
+  }
+];
+
+export const planningItems: PlanningItem[] = [
+  {
+    id: "plan_001",
+    title: "Inmeten badkamer",
+    customerId: "cust_001",
+    projectId: "proj_001",
+    workOrderId: "wo_001",
+    mechanic: "Ahmed",
+    date: "2026-06-18",
+    startTime: "09:00",
+    endTime: "12:30",
+    address: "Lijsterstraat 14, Amsterdam"
+  },
+  {
+    id: "plan_002",
+    title: "Onderhoud huurwoning",
+    customerId: "cust_002",
+    projectId: "proj_002",
+    workOrderId: "wo_002",
+    mechanic: "Samir",
+    date: "2026-06-19",
+    startTime: "08:00",
+    endTime: "14:00",
+    address: "Herengracht 88, Amsterdam"
+  }
+];
+
+export const projectAssets: ProjectAsset[] = [
+  {
+    id: "asset_001",
+    projectId: "proj_001",
+    folder: "voor foto's",
+    type: "foto",
+    name: "badkamer-voor.jpg",
+    size: 820000,
+    uploadedAt: "2026-06-16",
+    previewUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=900&q=80"
+  },
+  {
+    id: "asset_002",
+    projectId: "proj_003",
+    folder: "documenten",
+    type: "contract",
+    name: "werkafspraak-zolder.pdf",
+    size: 240000,
+    uploadedAt: "2026-06-18"
   }
 ];
 
